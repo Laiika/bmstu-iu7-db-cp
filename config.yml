@@ -1,0 +1,24 @@
+server:
+  host: localhost
+  port: 8080
+
+postgres:
+  username: user1
+  password: user1
+  host: localhost
+  port: 5432
+  dbname: cp
+
+emplpostgres:
+  username: empl1
+  password: empl1
+  host: localhost
+  port: 5432
+  dbname: cp
+
+adminpostgres:
+  username: admin1
+  password: admin1
+  host: localhost
+  port: 5432
+  dbname: cp

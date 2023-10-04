@@ -1,0 +1,1011 @@
+basePath: /api
+definitions:
+  db_cp_6_sem_internal_domain_entity.Analyzer:
+    properties:
+      id:
+        type: string
+      job_number:
+        type: string
+      part_number:
+        type: string
+      software_version:
+        type: string
+      type:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.Auth:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.CreateEvent:
+    properties:
+      peak_readings:
+        type: number
+      sensor_id:
+        type: string
+      signal_time:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.CreateType:
+    properties:
+      gases:
+        items:
+          type: string
+        type: array
+      max_sensors:
+        type: integer
+      name:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.CreateUser:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.Gas:
+    properties:
+      formula:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  db_cp_6_sem_internal_domain_entity.Sensor:
+    properties:
+      analyzer_id:
+        type: string
+      gas:
+        type: string
+      id:
+        type: string
+      low_limit_alarm:
+        type: string
+      type:
+        type: string
+      upper_limit_alarm:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: evgeniazavojskih@gmail.com
+    name: API Support
+  description: This is db course project backend API.
+  title: DB course project API
+  version: "1.0"
+paths:
+  /analyzer:
+    post:
+      consumes:
+      - application/json
+      description: add new analyzer
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored analyzer
+        in: body
+        name: analyzer
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.Analyzer'
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new analyzer
+      tags:
+      - employee
+  /analyzer/{id}:
+    delete:
+      description: delete analyzer by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Analyzer id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete analyzer by id
+      tags:
+      - employee
+    get:
+      description: return analyzer with the specified id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Analyzer id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show analyzer with the specified id
+      tags:
+      - user
+  /analyzer/{id}/sensors:
+    get:
+      description: return all sensors of specified analyzer
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Analyzer id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show sensors of specified analyzer
+      tags:
+      - user
+  /analyzer_type:
+    post:
+      consumes:
+      - application/json
+      description: add new analyzer type
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored analyzer type
+        in: body
+        name: anType
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.CreateType'
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new analyzer type
+      tags:
+      - employee
+  /analyzer_type/{name}:
+    delete:
+      description: delete analyzer type by name
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Analyzer type name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete analyzer type by name
+      tags:
+      - employee
+  /analyzer_type/{name}/analyzers:
+    get:
+      description: return all analyzers of specified type
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Name of analyzer type
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show analyzers of specified type
+      tags:
+      - user
+  /analyzer_type/{name}/gases:
+    get:
+      description: return all gases of specified type
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Name of analyzer type
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show gases of specified type
+      tags:
+      - user
+  /analyzer_types:
+    get:
+      description: return all analyzer types
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show all analyzer types
+      tags:
+      - user
+  /analyzers:
+    get:
+      description: return all analyzers
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show all analyzers
+      tags:
+      - user
+  /event:
+    post:
+      consumes:
+      - application/json
+      description: add new event
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored event
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.CreateEvent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new event
+      tags:
+      - employee
+  /event/{id}:
+    delete:
+      description: delete event by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Event id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete event by id
+      tags:
+      - employee
+  /events/{start}/{finish}:
+    get:
+      description: return all events that occurred during the specified period of
+        time
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Left period border
+        in: path
+        name: start
+        required: true
+        type: string
+      - description: Right period border
+        in: path
+        name: finish
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show events that occurred during the specified period of time
+      tags:
+      - user
+  /gas:
+    post:
+      consumes:
+      - application/json
+      description: add new gas
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored gas
+        in: body
+        name: gas
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.Gas'
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new gas
+      tags:
+      - employee
+  /gases:
+    get:
+      description: return all gases
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show all gases
+      tags:
+      - user
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: log in to the server
+      parameters:
+      - description: Authentication request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.Auth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Log in to the server
+      tags:
+      - common
+  /logout:
+    post:
+      description: log out from the server
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Log out from the server
+      tags:
+      - common
+  /sensor:
+    post:
+      consumes:
+      - application/json
+      description: add new sensor
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored sensor
+        in: body
+        name: sensor
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.Sensor'
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new sensor
+      tags:
+      - employee
+  /sensor/{id}:
+    delete:
+      description: delete sensor by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Sensor id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete sensor by id
+      tags:
+      - employee
+    patch:
+      consumes:
+      - application/json
+      description: update sensor analyzer_id by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: New analyzer id
+        in: body
+        name: anId
+        required: true
+        schema:
+          type: string
+      - description: Sensor id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update sensor analyzer_id by id
+      tags:
+      - employee
+  /sensor/{id}/events:
+    get:
+      description: return all events of specified sensor
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Sensor id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show events of specified sensor
+      tags:
+      - user
+  /sensors:
+    get:
+      description: return all sensors
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show all sensors
+      tags:
+      - user
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: add new user to the system
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Information about stored user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/db_cp_6_sem_internal_domain_entity.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add new user to the system
+      tags:
+      - admin
+  /user/{id}:
+    delete:
+      description: delete user by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete user by id
+      tags:
+      - admin
+    get:
+      description: return user with the specified id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show user with the specified id
+      tags:
+      - admin
+    patch:
+      consumes:
+      - application/json
+      description: update user role by id
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: New user role
+        in: body
+        name: role
+        required: true
+        schema:
+          type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update user role by id
+      tags:
+      - admin
+  /users:
+    get:
+      description: return all system users
+      parameters:
+      - description: User authentication token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show all system users
+      tags:
+      - admin
+schemes:
+- http
+swagger: "2.0"
