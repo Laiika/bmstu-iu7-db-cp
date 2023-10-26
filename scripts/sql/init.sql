@@ -103,6 +103,10 @@ create or replace function check_analyzer()
 returns trigger
 as $$
 begin
+    if new.analyzer_id is null then
+        return new;
+    end if;
+
     if (select count(*) from sensors where analyzer_id = new.analyzer_id) >=
     (select ats.max_sensors from analyzer_types ats join
     (select type from gas_analyzers where id = new.analyzer_id) ga on ga.type = ats.name) then

@@ -21,12 +21,12 @@ func NewSensorRepo() *SensorRepo {
 func (r *AnalyzerRepo) GetSensorById(client service.Client, ctx context.Context, id string) (*entity.Sensor, error) {
 	pgClient := client.(postgresql.Client)
 	q := `
-		SELECT id, type, gas, analyzer_id, low_limit_alarm, upper_limit_alarm
+		SELECT id, type, gas, COALESCE(analyzer_id, $1), low_limit_alarm, upper_limit_alarm
 		FROM sensors
-		WHERE id = $1
+		WHERE id = $2
 	`
 	var an entity.Sensor
-	err := pgClient.QueryRow(ctx, q, id).Scan(&an.Id, &an.Type, &an.Gas, &an.AnalyzerId, &an.LowLimitAlarm, &an.UpperLimitAlarm)
+	err := pgClient.QueryRow(ctx, q, "", id).Scan(&an.Id, &an.Type, &an.Gas, &an.AnalyzerId, &an.LowLimitAlarm, &an.UpperLimitAlarm)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -41,10 +41,10 @@ func (r *AnalyzerRepo) GetSensorById(client service.Client, ctx context.Context,
 func (r *SensorRepo) GetAllSensors(client service.Client, ctx context.Context) (entity.Sensors, error) {
 	pgClient := client.(postgresql.Client)
 	q := `
-		SELECT id, type, gas, analyzer_id, low_limit_alarm, upper_limit_alarm
+		SELECT id, type, gas, COALESCE(analyzer_id, $1), low_limit_alarm, upper_limit_alarm
 		FROM sensors
 	`
-	rows, err := pgClient.Query(ctx, q)
+	rows, err := pgClient.Query(ctx, q, "")
 	if err != nil {
 		return nil, pkgErrors.WithMessage(apperror.ErrInternal, err.Error())
 	}
@@ -71,11 +71,11 @@ func (r *SensorRepo) GetAllSensors(client service.Client, ctx context.Context) (
 func (r *SensorRepo) GetAnalyzerSensors(client service.Client, ctx context.Context, anId string) (entity.Sensors, error) {
 	pgClient := client.(postgresql.Client)
 	q := `
-		SELECT id, type, gas, analyzer_id, low_limit_alarm, upper_limit_alarm
+		SELECT id, type, gas, COALESCE(analyzer_id, $1), low_limit_alarm, upper_limit_alarm
 		FROM sensors
-		WHERE analyzer_id = $1
+		WHERE analyzer_id = $2
 	`
-	rows, err := pgClient.Query(ctx, q, anId)
+	rows, err := pgClient.Query(ctx, q, "", anId)
 	if err != nil {
 		return nil, pkgErrors.WithMessage(apperror.ErrInternal, err.Error())
 	}

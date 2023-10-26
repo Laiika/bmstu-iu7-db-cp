@@ -83,7 +83,7 @@ func TestService_CreateEvent(t *testing.T) {
 	service := NewService(repo, log)
 
 	tm := "2020-02-04"
-	signalTime, _ := time.Parse("2006-01-02", tm)
+	signalTime, _ := time.Parse("2006-01-02 11:11:11", tm)
 	event := &entity.Event{
 		SignalTime:   signalTime,
 		SensorId:     "22101BL013",
